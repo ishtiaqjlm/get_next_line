@@ -6,57 +6,60 @@
 /*   By: ishtiahm <ishtiahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 01:27:37 by ishtiahm          #+#    #+#             */
-/*   Updated: 2026/09/18 18:57:05 by ishtiahm         ###   ########.fr       */
+/*   Updated: 2026/09/24 19:39:58 by ishtiahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_free_all(char *buffer, char *stash)
+char	*ft_free_all(t_stash *stash)
 {
-	free(buffer);
-	free(stash);
+	free(stash->data);
 	return (NULL);
 }
-char	*ft_read_stash(int fd, char *stash, char *buffer)
+
+void	ft_read_stash(int fd, t_stash *stash, char *buffer)
 {
 	int		bytes;
 	char	*temp;
-	while (!ft_strchr(stash, '\n'))
+
+	while (!ft_strchr(stash->data, '\n'))
 	{
 		bytes = read(fd, buffer, BUFFER_SIZE);
 		if (bytes < 0)
 		{
-			return (ft_free_all(buffer, stash));
+			ft_free_all(stash);
+			return	;
 		}
 		if (bytes == 0)
 			break ;
 		buffer[bytes] = '\0';
-		temp = ft_strjoin(stash, buffer);
+		temp = ft_strjoin(stash->data, buffer);
 		if (!temp)
 		{
-			return (ft_free_all(buffer, stash));
+			ft_free_all(stash);
+			return	;
 		}
 		free(stash);
-		stash = temp;
+		stash->data = temp;
 	}
-	return (stash);
 }
+
 char	*get_next_line(int fd)
 {
 	char		*buffer;
 	char		*line;
-	static char	*stash;
+	static t_stash	stash;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-	stash = ft_read_stash(fd, stash, buffer);
+	ft_read_stash(fd, &stash, buffer);
 	free(buffer);
 	if (!stash)
-    	return (NULL);
+		return (NULL);
 	if (!*stash)
 	{
 		free(stash);

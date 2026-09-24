@@ -6,7 +6,7 @@
 /*   By: ishtiahm <ishtiahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:20:55 by ishtiahm          #+#    #+#             */
-/*   Updated: 2026/09/18 19:22:37 by ishtiahm         ###   ########.fr       */
+/*   Updated: 2026/09/24 18:37:58 by ishtiahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -76,19 +76,19 @@ char	*ft_get_line(char *stash)
 
 char	*ft_strchr(const char *s, int c)
 {
-	int i;
+	int	i;
 
 	if (!s)
 		return (NULL);
 	i = 0;
 	while (s[i] != '\0' && s[i] != c)
 		i++;
-    if (s[i] == c)
-        return ((char*)&s[i]);
-    return (NULL);
+	if (s[i] == c)
+		return ((char *)&s[i]);
+	return (NULL);
 }
 
-char *ft_update_stash(char *stash)
+char	*ft_update_stash(char *stash)
 {
 	int		i;
 	int		j;
@@ -105,7 +105,7 @@ char *ft_update_stash(char *stash)
 	if (!new)
 		return (NULL);
 	j = 0;
-	while (stash[i+j] != '\0')
+	while (stash[i + j] != '\0')
 	{
 		new[j] = stash[i + j];
 		j++;
