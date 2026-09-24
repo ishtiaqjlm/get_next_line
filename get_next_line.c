@@ -12,36 +12,58 @@
 
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
+char	*ft_free_all(char *buffer, char *stash)
 {
-	char		*buffer;
-	char		*temp;
-	char		*line;
-	static char	*stash;
-	int			bytes;
-
-	buffer = malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
-	bytes = read(fd, buffer, BUFFER_SIZE);
-	if (bytes >= 0)
-		buffer[bytes] = '\0';
-	if (bytes == 0)
-	{
-		free(buffer);
-		return (NULL);
-	}
+	free(buffer);
+	free(stash);
+	return (NULL);
+}
+char	*ft_read_stash(int fd, char *stash, char *buffer)
+{
+	int		bytes;
+	char	*temp;
 	while (!ft_strchr(stash, '\n'))
 	{
-		if (bytes <= 0)
+		bytes = read(fd, buffer, BUFFER_SIZE);
+		if (bytes < 0)
+		{
+			return (ft_free_all(buffer, stash));
+		}
+		if (bytes == 0)
 			break ;
 		buffer[bytes] = '\0';
 		temp = ft_strjoin(stash, buffer);
+		if (!temp)
+		{
+			return (ft_free_all(buffer, stash));
+		}
 		free(stash);
 		stash = temp;
-		bytes = read(fd, buffer, BUFFER_SIZE);
 	}
-	buffer[bytes] = '\0';
+	return (stash);
+}
+char	*get_next_line(int fd)
+{
+	char		*buffer;
+	char		*line;
+	static char	*stash;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	stash = ft_read_stash(fd, stash, buffer);
+	free(buffer);
+	if (!stash)
+    	return (NULL);
+	if (!*stash)
+	{
+		free(stash);
+		stash = NULL;
+		return (NULL);
+	}
 	line = ft_get_line(stash);
+	stash = ft_update_stash(stash);
 	return (line);
 }

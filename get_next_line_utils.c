@@ -9,7 +9,7 @@
 /*   Updated: 2026/09/18 19:22:37 by ishtiahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+#include "get_next_line.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -60,34 +60,57 @@ char	*ft_get_line(char *stash)
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (stash[i] == '\n')
-		line = malloc(i + 2);
-	else
-		line = malloc(i + 1);
+		i++;
+	line = malloc(i + 1);
 	if (!line)
 		return (NULL);
 	j = 0;
-	while (stash[j])
+	while (j < i)
 	{
 		line[j] = stash[j];
-		if (stash[j] == '\n')
-			break ;
 		j++;
 	}
 	line[j] = '\0';
 	return (line);
 }
 
-char	*ft_strchr(char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
 	int i;
-	
+
 	if (!s)
 		return (NULL);
 	i = 0;
 	while (s[i] != '\0' && s[i] != c)
 		i++;
-    
-    if (s[i] == c) 
-        return (char*)&s[i];
+    if (s[i] == c)
+        return ((char*)&s[i]);
     return (NULL);
+}
+
+char *ft_update_stash(char *stash)
+{
+	int		i;
+	int		j;
+	int		len;
+	char	*new;
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	len = ft_strlen(stash) - i;
+	new = malloc(len + 1);
+	if (!new)
+		return (NULL);
+	j = 0;
+	while (stash[i+j] != '\0')
+	{
+		new[j] = stash[i + j];
+		j++;
+	}
+	new[j] = '\0';
+	free(stash);
+	return (new);
 }
