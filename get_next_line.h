@@ -15,7 +15,7 @@
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
-#include <stdio.h>
+
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
@@ -29,8 +29,12 @@ typedef struct s_stash
 
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
-char	*ft_strjoin(char const *s1, char const *s2);
+int	        ft_append_stash(t_stash *stash, char *buffer, int bytes);
 char	*ft_get_line(t_stash *stash);
 void	ft_update_stash(t_stash *stash);
 char	*ft_strchr(const char *s, int c);
+int	        ft_grow_stash(t_stash *stash, size_t bytes);
+int	        ft_read_stash(int fd, t_stash *stash, char *buffer);
+char	*ft_free_all(t_stash *stash);
+int	        ft_check_stash(t_stash *stash);
 #endif

@@ -45,8 +45,7 @@ int	ft_grow_stash(t_stash *stash, size_t bytes)
 int	ft_read_stash(int fd, t_stash *stash, char *buffer)
 {
 	int	bytes;
-	int	grow;
-	int	i;
+	int	result;
 
 	while (!ft_strchr(stash->data, '\n'))
 	{
@@ -54,37 +53,35 @@ int	ft_read_stash(int fd, t_stash *stash, char *buffer)
 		if (bytes < 0)
 		{
 			ft_free_all(stash);
-			return	(-1);
+			return (-1);
 		}
 		if (bytes == 0)
 			break ;
 		buffer[bytes] = '\0';
-		if(stash->used + bytes + 1 > stash ->capacity)
-		{
-			grow = ft_grow_stash(stash, bytes);
-			if(!grow)
-			{
-				ft_free_all(stash);
-				return (-1);
-			}
-		}
-		i = 0;
-		while (i < bytes)
-		{
-			stash->data[stash->used + i] = buffer[i];
-			i++;
-		}
-		stash->used += bytes;
-		stash->data[stash->used] = '\0';
+		result = ft_append_stash(stash, buffer, bytes);
+		if (result == -1)
+			return (-1);
+	}
+	return (1);
+}
+
+int	ft_check_stash(t_stash *stash)
+{
+	if (!stash->data)
+		return (0);
+	if (!*stash->data)
+	{
+		ft_free_all(stash);
+		return (0);
 	}
 	return (1);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buffer;
-	char		*line;
-	static t_stash		stash;
+	char			*buffer;
+	char			*line;
+	static t_stash	stash;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -96,18 +93,9 @@ char	*get_next_line(int fd)
 		free(buffer);
 		return (NULL);
 	}
-	if (!stash.data)
+	if (!ft_check_stash(&stash))
 	{
 		free(buffer);
-		return (NULL);
-	}
-	if (!*stash.data)
-	{
-		free(buffer);
-		free(stash.data);
-		stash.data = NULL;
-		stash.used = 0;
-		stash.capacity = 0;
 		return (NULL);
 	}
 	line = ft_get_line(&stash);

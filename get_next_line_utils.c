@@ -21,33 +21,22 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+int	ft_append_stash(t_stash *stash, char *buffer, int bytes)
 {
-	char	*new;
-	size_t	i;
-	size_t	j;
+	int	i;
 
-	if (s1 == NULL)
-		s1 = "";
-	if (s2 == NULL)
-		s2 = "";
-	new = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!new)
-		return (NULL);
+	if (stash->used + bytes + 1 > stash->capacity)
+		if (!ft_grow_stash(stash, bytes))
+			return (-1);
 	i = 0;
-	while (s1[i])
+	while (i < bytes)
 	{
-		new[i] = s1[i];
+		stash->data[stash->used + i] = buffer[i];
 		i++;
 	}
-	j = 0;
-	while (s2[j])
-	{
-		new[i + j] = s2[j];
-		j++;
-	}
-	new[i + j] = '\0';
-	return (new);
+	stash->used += bytes;
+	stash->data[stash->used] = '\0';
+	return (1);
 }
 
 char	*ft_get_line(t_stash *stash)
