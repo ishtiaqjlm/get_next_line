@@ -22,19 +22,19 @@
 
 typedef struct s_stash
 {
-        char    *data;
-        size_t  used;
-        size_t  capacity;
-}       t_stash;
+	char	*data;
+	size_t	used;
+	size_t	capacity;
+}	t_stash;
 
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
-int	        ft_append_stash(t_stash *stash, char *buffer, int bytes);
+int		ft_append_stash(t_stash *stash, char *buffer, int bytes);
 char	*ft_get_line(t_stash *stash);
 void	ft_update_stash(t_stash *stash);
 char	*ft_strchr(const char *s, int c);
-int	        ft_grow_stash(t_stash *stash, size_t bytes);
-int	        ft_read_stash(int fd, t_stash *stash, char *buffer);
+int		ft_grow_stash(t_stash *stash, size_t bytes);
+int		ft_read_stash(int fd, t_stash *stash, char *buffer);
 char	*ft_free_all(t_stash *stash);
-int	        ft_check_stash(t_stash *stash);
+int		ft_check_stash(t_stash *stash);
 #endif
