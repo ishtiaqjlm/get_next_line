@@ -8,16 +8,22 @@ int	main(void)
 {
 	int		fd;
 	char	*line;
-
+	
 	fd = open("big_line_with_nl.txt", O_RDONLY);
 	if (fd == -1)
+	{
 		return (1);
+	}
 	line = get_next_line(fd);
-	//printf("[%s]", line);
-	//free(line);
+	/*if (line)
+	{
+		printf("LINE LENGTH = %zu\n", ft_strlen(line));
+		printf("FIRST 20 = [%.20s]\n", line);
+	}
+	free(line);*/
 	while (line)
 	{
-		printf("[%s]", line);
+		//printf("[%s]", line);
 		free(line);
 		line = get_next_line(fd);
 	}

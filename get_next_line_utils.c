@@ -6,7 +6,7 @@
 /*   By: ishtiahm <ishtiahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/17 16:20:55 by ishtiahm          #+#    #+#             */
-/*   Updated: 2026/09/24 18:37:58 by ishtiahm         ###   ########.fr       */
+/*   Updated: 2026/09/25 16:09:20 by ishtiahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -50,16 +50,16 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (new);
 }
 
-char	*ft_get_line(char *stash)
+char	*ft_get_line(t_stash *stash)
 {
 	int		i;
 	int		j;
 	char	*line;
 
 	i = 0;
-	while (stash[i] && stash[i] != '\n')
+	while (stash->data[i] && stash->data[i] != '\n')
 		i++;
-	if (stash[i] == '\n')
+	if (stash->data[i] == '\n')
 		i++;
 	line = malloc(i + 1);
 	if (!line)
@@ -67,7 +67,7 @@ char	*ft_get_line(char *stash)
 	j = 0;
 	while (j < i)
 	{
-		line[j] = stash[j];
+		line[j] = stash->data[j];
 		j++;
 	}
 	line[j] = '\0';
@@ -88,29 +88,22 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_update_stash(char *stash)
+void	ft_update_stash(t_stash *stash)
 {
 	int		i;
 	int		j;
-	int		len;
-	char	*new;
 
 	i = 0;
-	while (stash[i] && stash[i] != '\n')
+	while (stash->data[i] && stash->data[i] != '\n')
 		i++;
-	if (stash[i] == '\n')
+	if (stash->data[i] == '\n')
 		i++;
-	len = ft_strlen(stash) - i;
-	new = malloc(len + 1);
-	if (!new)
-		return (NULL);
 	j = 0;
-	while (stash[i + j] != '\0')
+	while (stash->data[i + j] != '\0')
 	{
-		new[j] = stash[i + j];
+		stash->data[j] = stash->data[i + j];
 		j++;
 	}
-	new[j] = '\0';
-	free(stash);
-	return (new);
+	stash->data[j] = '\0';
+	stash->used = j;
 }
