@@ -46,8 +46,10 @@ int	ft_read_stash(int fd, t_stash *stash, char *buffer)
 {
 	int	bytes;
 	int	result;
+	int	found;
 
-	while (!ft_strchr(stash->data, '\n'))
+	found = (ft_strchr(stash->data, '\n') != NULL);
+	while (!found)
 	{
 		bytes = read(fd, buffer, BUFFER_SIZE);
 		if (bytes < 0)
@@ -58,6 +60,8 @@ int	ft_read_stash(int fd, t_stash *stash, char *buffer)
 		if (bytes == 0)
 			break ;
 		buffer[bytes] = '\0';
+		if (ft_strchr(buffer, '\n'))
+			found = 1;
 		result = ft_append_stash(stash, buffer, bytes);
 		if (result == -1)
 			return (-1);
